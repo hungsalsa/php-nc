@@ -1,9 +1,9 @@
 <?php ob_start();session_start(); ?>
 <?php include('includes/header.php') ?>
 <?php include('../inc/images_helper.php') ?>
-
+<?php include('../inc/function.php'); ?>
 <?php 
-include('../inc/function.php');
+
 // Lấy slider nếu sửa
 if(isset($_GET['id']) && filter_var($_GET['id'],FILTER_VALIDATE_INT,array('min_ranger'=>1))){
 	$id = $_GET['id'];
@@ -11,14 +11,12 @@ if(isset($_GET['id']) && filter_var($_GET['id'],FILTER_VALIDATE_INT,array('min_r
 
 	$query = mysqli_query($dbc,$sql);
 
-	// kt_query($dbc,$query);
+	kt_query($dbc,$query);
 	if(mysqli_affected_rows($dbc)){
 		$row_edit = mysqli_fetch_assoc($query);
 	}else {
 		header('Location:list_slider.php');
 	}
-
-
 }
 $target_dir = "../uploads/";
 // Them moi slider
@@ -44,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD']=='POST'){
 	}
 
 	// Upload ảnh
-	$img = $_FILES['anh']['name'];
-	$image_up = new upload_img($img,'uploads');
+	// $img = 'anh';
+	// $image_up = new Image($img,'../uploads');
 	
 	// Nếu không lỗi
 	if(empty($errors)){
@@ -135,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD']=='POST'){
 
 			<div class="form-group">
 				<label>Ảnh đại diện</label>
-				<input type="file" name="anh" class="form-control <?php if(isset($errors['anh'])) echo 'not-invalid'; ?>" placeholder="Ảnh đại diện" value="<?= (isset($id))? $row_edit['anh']:''; ?><?=  (isset($_POST['submit']))? $_POST['anh']:''; ?>">
+				<input type="text" id="imageFile" name="anh" class="form-control <?php if(isset($errors['anh'])) echo 'not-invalid'; ?>" placeholder="Ảnh đại diện" value="<?= (isset($id))? $row_edit['anh']:''; ?><?=  (isset($_POST['submit']))? $_POST['anh']:''; ?>" >
 				<?php if (isset($id)): ?>
 					<img src="../<?= $row_edit['anh'] ?>" style="max-height: 90px">
 				<?php endif ?>
@@ -172,6 +170,12 @@ if ($_SERVER['REQUEST_METHOD']=='POST'){
 			    </div>
 				<?php endif ?>
 			</div>
+
+			<div class="form-group">
+				<label>Mo ta</label>
+				<textarea></textarea>
+			</div>
+
 			<div class="form-group">
 				<label style="display: block;">Trạng thái</label>
 				<label class="radio-inline"><input type="radio" name="status" value="1" <?=  (isset($_POST['submit']) && $_POST['status']==1)? 'checked="checked"':''; ?> <?= (isset($id) && $row_edit['status']==1)?'checked="checked"':'' ?> checked="checked">Hiển thị</label>
